@@ -3,8 +3,8 @@ import json
 
 majorearningdata = json.loads(open("majordata.json").read())
 
-collegename = "South University-Montgomery"
-testmajor = 'business_marketing'
+collegename = "Harvard"
+testmajor = 'engineering'
 
 url = "https://api.data.gov/ed/collegescorecard/v1/schools?school.name={}&api_key=pjocLbVezV0ADpMYlUBYtNJYt4ObWiXtFiGgvnDr"
 
@@ -46,9 +46,11 @@ actualavg = sum(avgdata)/len(avgdata) # Take average
 
 scalefactor = actualavg/idealavg # Multiplicative difference between ideal average and the actual average
 
-'''print(majorratios)
+print(majorratios)
 print(idealavg)
 print(actualavg)
-print(scalefactor)'''
+print(scalefactor)
 
-print("A {} major at {} would make {}".format(testmajor,collegename,round(scalefactor*majorearningdata[testmajor],2)))
+finalsalary = (scalefactor*majorearningdata[testmajor]+actualavg)/2
+
+print("A {} major at {} would make {}".format(testmajor,collegename,round(finalsalary,2)))

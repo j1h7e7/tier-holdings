@@ -3,13 +3,17 @@ import json
 import requests
 import re
 from earningcalculator import getimportantinfo
+import math
  
 # Dictionary with options
 colleges = open('collegelist.txt').readlines()
 colleges = [c.strip() for c in colleges]
 majors = list(json.loads(open('majordata.json').read()).keys())
+majors.sort()
 
 majorearningdata = json.loads(open("majordata.json").read())
+
+textboxsize = 50
 
 class AutocompleteEntry(Entry):
     def __init__(self, lista, *args, **kwargs):
@@ -34,7 +38,7 @@ class AutocompleteEntry(Entry):
             words = self.comparison()
             if words:            
                 if not self.lb_up:
-                    self.lb = Listbox()
+                    self.lb = Listbox(width=textboxsize)
                     self.lb.bind("<Double-Button-1>", self.selection)
                     self.lb.bind("<Right>", self.selection)
                     self.lb.place(x=self.winfo_x(), y=self.winfo_y()+self.winfo_height())
@@ -89,10 +93,23 @@ def calculate():
     selcol = college.get()
     selmajor = tkvar.get()
 
-    if not selcol in storeddata: storeddata.update({selcol:getimportantinfo(selcol)})
+    if not selcol in storeddata:
+        try: newdata = getimportantinfo(selcol)
+        except IndexError:
+            print("ERROR")
+            return
+        storeddata.update({selcol:newdata})
 
-    earnings.config(text="Earnings: $"+str(round(storeddata[selcol][0]*majorearningdata[selmajor],2)))
-    dropout.config(text="Graduation Rate: "+"{0:.0%}".format(storeddata[selcol][1]))
+    e = (storeddata[selcol][0]*majorearningdata[selmajor]+storeddata[selcol][2])/2
+    e = round(e,2)
+    g = storeddata[selcol][1]
+
+    earnings.config(text="Earnings: $"+str(e))
+    dropout.config(text="Graduation Rate: "+"{0:.1%}".format(g))
+
+    r = g/(1+math.e**(5-e/10000))
+
+    rating.config(text="Rating: "+"{0:.2%}".format(r))
 
 if __name__ == '__main__':
     root = Tk()
@@ -100,7 +117,7 @@ if __name__ == '__main__':
 
     root.grid_columnconfigure(0,minsize=500)
 
-    college = AutocompleteEntry(colleges, root)
+    college = AutocompleteEntry(colleges, root,width=textboxsize)
     college.grid(row=0, column=0,sticky='N')
 
     tkvar = StringVar(root)
@@ -120,6 +137,9 @@ if __name__ == '__main__':
 
     dropout = Label(root,text="Graduation Rate: N/A")
     dropout.grid(row=3+blankrows,column=0)
+
+    rating = Label(root,text="Rating: ")
+    rating.grid(row=4+blankrows,column=0)
 
 
     root.update()

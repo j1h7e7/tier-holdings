@@ -5,7 +5,7 @@ majorearningdata = json.loads(open("majordata.json").read())
 url = "https://api.data.gov/ed/collegescorecard/v1/schools?school.name={}&api_key=pjocLbVezV0ADpMYlUBYtNJYt4ObWiXtFiGgvnDr"
 
 def getimportantinfo(collegename):
-    '''returns scalefactor, graduation rate'''
+    '''returns scalefactor, graduation rate, average salary'''
     webdata = json.loads(requests.get(url.format(collegename.replace(" ","%20"))).text)['results'][0]['latest']
 
     earnings = webdata['earnings']
@@ -44,4 +44,4 @@ def getimportantinfo(collegename):
 
     scalefactor = actualavg/idealavg # Multiplicative difference between ideal average and the actual average
 
-    return [scalefactor,gradrate]
+    return [scalefactor,gradrate,actualavg]
