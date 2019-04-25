@@ -2,6 +2,8 @@ import requests
 import json
 
 majorearningdata = json.loads(open("majordata.json").read())
+majordropdata = json.loads(open("dropoutdata.json").read())
+majordropdata = {m: 1-majordropdata[m]/100 for m in majordropdata}
 url = "https://api.data.gov/ed/collegescorecard/v1/schools?school.name={}&api_key=pjocLbVezV0ADpMYlUBYtNJYt4ObWiXtFiGgvnDr"
 
 def getimportantinfo(collegename):
@@ -15,8 +17,11 @@ def getimportantinfo(collegename):
     gradrate = completion['completion_rate_4yr_200nt']
 
     idealavg = 0
+    idealdrop = 0
     for major in majorratios:
-        try: idealavg += majorratios[major]*majorearningdata[major]
+        try:
+            idealavg += majorratios[major]*majorearningdata[major]
+            idealdrop += majorratios[major]*majordropdata[major]
         except TypeError: pass
 
     avgdata = {}
@@ -43,5 +48,6 @@ def getimportantinfo(collegename):
     actualavg = sum(avgdata)/len(avgdata) # Take average
 
     scalefactor = actualavg/idealavg # Multiplicative difference between ideal average and the actual average
+    dropsf = (1-gradrate)/idealdrop
 
-    return [scalefactor,gradrate,actualavg]
+    return [scalefactor,dropsf,actualavg]

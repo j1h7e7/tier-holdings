@@ -12,6 +12,8 @@ majors = list(json.loads(open('majordata.json').read()).keys())
 majors.sort()
 
 majorearningdata = json.loads(open("majordata.json").read())
+majordropdata = json.loads(open("dropoutdata.json").read())
+majordropdata = {m: 1-majordropdata[m]/100 for m in majordropdata}
 
 textboxsize = 50
 
@@ -102,12 +104,13 @@ def calculate():
 
     e = (storeddata[selcol][0]*majorearningdata[selmajor]+storeddata[selcol][2])/2
     e = round(e,2)
-    g = storeddata[selcol][1]
+    g = storeddata[selcol][1]*majordropdata[selmajor]
+    g = 1-g
 
     earnings.config(text="Earnings: $"+str(e))
     dropout.config(text="Graduation Rate: "+"{0:.1%}".format(g))
 
-    r = g/(1+math.e**(5-e/10000))
+    r = g/(1+math.e**((50-(e/1000))/10))
 
     rating.config(text="Rating: "+"{0:.2%}".format(r))
 
