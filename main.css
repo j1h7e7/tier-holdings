@@ -1,0 +1,16 @@
+ul{
+    text-align:left;         
+}
+.ui-draggable, .ui-droppable {
+    background-position: top;
+}
+.ui-autocomplete  {
+    max-height: 200px;
+    overflow-y: auto; 
+    text-overflow: ellipsis;
+    position: relative;
+}
+#output {
+    visibility: visible;
+}
+    
