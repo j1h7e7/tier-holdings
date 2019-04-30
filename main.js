@@ -10,7 +10,13 @@ function loadFile(filePath) {
 }
 
 function getIncome(){
-	majorearningdata = JSON.parse(loadFile("majordata.json"));
+  majorearningdata = JSON.parse(loadFile("majordata.json"));
+  rawdropoutdata = JSON.parse(loadFile("dropoutdata.json"));
+  majordropoutdata = {};
+  for(major in rawdropoutdata){
+    majordropoutdata[major] = 1-rawdropoutdata[major]/100;
+  }
+  
 
 	var collegename = document.getElementById("collegeSearch").value;
 	var majorsElem =document.getElementById("majors") 
@@ -27,10 +33,16 @@ function getIncome(){
 	var completion = webdata['completion'];
 	var gradrate = completion['completion_rate_4yr_200nt'];
 
-	var idealavg = 0;
+  var idealavg = 0;
+  var idealdrop = 0;
 	for(var major in majorratios){
-		try{idealavg += majorratios[major]*majorearningdata[major];}
-		catch(err){}
+		try{
+      idealavg += majorratios[major]*majorearningdata[major];
+      idealdrop += majorratios[major]*majordropoutdata[major];
+    }
+		catch(err){
+      console.log("Error getting major data for "+major+".")
+    }
 	}
 
 	var avgdata= {}
@@ -62,10 +74,18 @@ function getIncome(){
 		}
 	}
 
-	var scalefactor = (sum/len)/idealavg;
+  var scalefactor = (sum/len)/idealavg;
+  var dropsf = (1-gradrate)/idealdrop;
+
+  var finalearnings = (scalefactor*majorearningdata[testmajor]+sum/len)/2
+  var finalgradrate = 1-dropsf*majordropoutdata[testmajor]
+
+  var finalrating = finalgradrate / (1 + Math.pow(Math.E,(50-(finalearnings/1000))/10));
 
 	document.getElementById('output').innerHTML = "A " + testMajorFormatted + " major at " + collegename 
-	+ " would make $" + Math.round(scalefactor*majorearningdata[testmajor],2) + ".";
+  + " would make $" + Math.round(finalearnings,2) + ", and would have a graduation rate of "
+  + parseFloat(finalgradrate*100).toFixed(2)+"%." + "<br>"
+  + "The final rating is " + parseFloat(finalrating*100).toFixed(2)+"%.";
 
 }
 
