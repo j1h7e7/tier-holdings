@@ -91,10 +91,11 @@ function getIncome(){
 
 $(document).ready(function() {
 	$( function() {
-		var collegeList = loadFile("collegelist.txt").split("\n");
+    var collegeList = loadFile("collegelist.txt").split("\n");
+    console.log(collegeList)
 		$( "#collegeSearch" ).autocomplete({
 			source: collegeList
-		}, "option", "position", { my: "center top", at: "center bottom"});
+		});
 	} );
 });
 
