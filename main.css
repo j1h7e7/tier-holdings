@@ -10,14 +10,17 @@ ul{
 	text-overflow: ellipsis;
 	position: relative;
 }
-#output {
-	visibility: visible;
-}
 .flex-container {
 	display: flex;
 }
   
-.fill-width {
-	flex: 1;
+.center{
+	text-align: center;
 }
-	
+
+#containerDiv {
+	margin-top: 2%;
+	margin-bottom: 2%;
+	margin-right: 5%;
+	margin-left: 5%;
+}
