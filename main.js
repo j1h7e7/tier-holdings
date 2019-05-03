@@ -77,22 +77,44 @@ function getIncome(){
   var scalefactor = (sum/len)/idealavg;
   var dropsf = (1-gradrate)/idealdrop;
 
+  console.log(idealdrop)
+
   var finalearnings = (scalefactor*majorearningdata[testmajor]+sum/len)/2
   var finalgradrate = 1-dropsf*majordropoutdata[testmajor]
 
   var finalrating = finalgradrate / (1 + Math.pow(Math.E,(50-(finalearnings/1000))/10));
 
+  // Error checks:
+  if(finalrating<0||finalgradrate<0||isNaN(finalearnings)||isNaN(finalrating)||isNaN(finalgradrate)){
+    processingerror()
+    return
+  }
+
 	document.getElementById('output').innerHTML = "A " + testMajorFormatted + " major at " + collegename 
   + " would make $" + Math.round(finalearnings,2) + ", and would have a graduation rate of "
   + parseFloat(finalgradrate*100).toFixed(2)+"%." + "<br>"
-  + "The final rating is " + parseFloat(finalrating*100).toFixed(2)+"%.";
+  document.getElementById('finalratingtext').innerHTML = "Final Rating: "
+  document.getElementById('rating').innerHTML = parseFloat(finalrating*100).toFixed(2)+"%";
 
+  var red = 255-Math.max(0,finalrating-0.5)*510
+  var green = 0+Math.min(0.5,finalrating)*510
+  var rgb = Math.floor(red)*256*256+Math.floor(green)*256
+  var colorstring = "000000"+rgb.toString(16)
+  colorstring = colorstring.substr(colorstring.length-6)
+  document.getElementById('rating').style.color = "#"+colorstring
+
+}
+
+function processingerror() {
+  document.getElementById('output').innerHTML = "There has been an error or there is not enough data for the selected school."
+  + " Please try again or change the school or major."
+  document.getElementById('finalratingtext').innerHTML = ""
+  document.getElementById('rating').innerHTML = ""
 }
 
 $(document).ready(function() {
 	$( function() {
     var collegeList = loadFile("collegelist.txt").split("\n");
-    console.log(collegeList)
 		$( "#collegeSearch" ).autocomplete({
 			source: collegeList
 		});

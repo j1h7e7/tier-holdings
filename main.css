@@ -6,9 +6,14 @@ ul{
 }
 .ui-autocomplete  {
 	max-height: 200px;
-	overflow-y: auto; 
+	overflow-y: auto;
 	text-overflow: ellipsis;
 	position: relative;
+	background-color: white;
+	width: 10px; /* this doesn't actually set the width to 10px but it does what i want so like */
+}
+.ui-widget-content {
+	background: #ffffff;
 }
 .flex-container {
 	display: flex;
