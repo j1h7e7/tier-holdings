@@ -86,6 +86,10 @@ function getIncome(){
   var finalearnings = (scalefactor*majorearningdata[testmajor]+sum/len)/2
   var finalgradrate = 1-dropsf*majordropoutdata[testmajor]
 
+  if(finalgradrate<0.5){
+    finalgradrate = 1/(1+Math.pow(Math.E,(-5*(finalgradrate-0.5))))
+  }
+
   var finalrating = finalgradrate / (1 + Math.pow(Math.E,(50-(finalearnings/1000))/10));
 
   // Error checks:
