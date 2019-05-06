@@ -24,8 +24,14 @@ function getIncome(){
 	var testMajorFormatted = majorsElem.options[majorsElem.selectedIndex].text;
 	var url = "https://api.data.gov/ed/collegescorecard/v1/schools?school.name={0}&api_key=pjocLbVezV0ADpMYlUBYtNJYt4ObWiXtFiGgvnDr";
 
-	var webdata = JSON.parse(loadFile("https://api.data.gov/ed/collegescorecard/v1/schools?school.name=" + 
-	(collegename.replace(/ /g,"%20")) + "&api_key=pjocLbVezV0ADpMYlUBYtNJYt4ObWiXtFiGgvnDr"))['results'][0]['latest'];
+  try{
+    var webdata = JSON.parse(loadFile("https://api.data.gov/ed/collegescorecard/v1/schools?school.name=" + 
+    (collegename.replace(/ /g,"%20")) + "&api_key=pjocLbVezV0ADpMYlUBYtNJYt4ObWiXtFiGgvnDr"))['results'][0]['latest'];
+  }
+  catch(err){
+    processingerror()
+    return
+  }
 
 	var earnings = webdata['earnings'];
 	var majorratios = webdata['academics']['program_percentage'];
@@ -77,8 +83,6 @@ function getIncome(){
   var scalefactor = (sum/len)/idealavg;
   var dropsf = (1-gradrate)/idealdrop;
 
-  console.log(idealdrop)
-
   var finalearnings = (scalefactor*majorearningdata[testmajor]+sum/len)/2
   var finalgradrate = 1-dropsf*majordropoutdata[testmajor]
 
@@ -123,7 +127,7 @@ $(document).ready(function() {
 
 $(document).ready(function () {
 	$('#collegeForm').on('submit', function(e) {
-			console.log("submitted")
+			//console.log("submitted")
 			e.preventDefault();
 			getIncome();
 	});
