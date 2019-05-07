@@ -83,13 +83,14 @@ function getIncome(){
   var scalefactor = (sum/len)/idealavg;
   var dropsf = (1-gradrate)/idealdrop;
 
-  console.log(idealdrop)
+  //console.log(idealdrop)
 
   var finalearnings = (scalefactor*majorearningdata[testmajor]+sum/len)/2
   var finalgradrate = 1-dropsf*majordropoutdata[testmajor]
 
-  if(finalgradrate<0.5){
-    finalgradrate = 1/(1+Math.pow(Math.E,(-5*(finalgradrate-0.5))))
+  if(finalgradrate<0.25){
+    var c1 = Math.log(3)*(-4)
+    finalgradrate = 1/(1+Math.pow(Math.E,(c1*(finalgradrate-0.5))))
   }
 
   var finalrating = finalgradrate / (1 + Math.pow(Math.E,(50-(finalearnings/1000))/10));
@@ -101,8 +102,8 @@ function getIncome(){
   }
 
 	document.getElementById('output').innerHTML = "A " + testMajorFormatted + " major at " + collegename 
-  + " would make $" + Math.round(finalearnings,2) + ", and would have a graduation rate of "
-  + parseFloat(finalgradrate*100).toFixed(2)+"%." + "<br>"
+  + " would make an average of $" + Math.round(finalearnings,2) + " ten years after enrolling,"
+  + " and would have an average graduation rate of " + parseFloat(finalgradrate*100).toFixed(2)+"%." + "<br>"
   document.getElementById('finalratingtext').innerHTML = "Final Rating: "
   document.getElementById('rating').innerHTML = parseFloat(finalrating*100).toFixed(2)+"%";
 
