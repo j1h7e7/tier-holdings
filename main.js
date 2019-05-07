@@ -83,6 +83,8 @@ function getIncome(){
   var scalefactor = (sum/len)/idealavg;
   var dropsf = (1-gradrate)/idealdrop;
 
+  console.log(idealdrop)
+
   var finalearnings = (scalefactor*majorearningdata[testmajor]+sum/len)/2
   var finalgradrate = 1-dropsf*majordropoutdata[testmajor]
 
