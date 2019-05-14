@@ -96,7 +96,7 @@ function getIncome(){
   var finalrating = finalgradrate / (1 + Math.pow(Math.E,(50-(finalearnings/1000))/10));
 
   // Error checks:
-  if(finalrating<0||finalgradrate<0||isNaN(finalearnings)||isNaN(finalrating)||isNaN(finalgradrate)){
+  if(finalrating<0||finalgradrate<0||isNaN(finalearnings)||isNaN(finalrating)||isNaN(finalgradrate)||!isFinite(finalearnings)){
     processingerror()
     return
   }
